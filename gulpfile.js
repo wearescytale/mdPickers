@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     wrap = require('gulp-wrap'),
     concat = require('gulp-concat'),
     autoprefixer = require('gulp-autoprefixer'),
-    path = require('path');
+    path = require('path'),
+    gutil = require('gulp-util');
 
 var outputFolder = 'dist/';
 var moduleName = 'mdPickers';
@@ -25,14 +26,14 @@ gulp.task('assets', function() {
         .pipe(gulp.dest(outputFolder));
 });
 
-gulp.task('build-app', function() {  
+gulp.task('build-app', function() {
     return gulp.src(['src/mdPickers.js', 'src/core/**/*.js', 'src/components/**/*.js'])
         .pipe(concat('mdPickers.js'))
         .pipe(wrap('(function() {\n"use strict";\n<%= contents %>\n})();'))
         .pipe(sourcemaps.init())
         .pipe(gulp.dest(outputFolder))
         .pipe(rename({suffix: '.min'}))
-        .pipe(uglify())
+        .pipe(uglify().on('error', gutil.log))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(outputFolder));
 });

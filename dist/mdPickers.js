@@ -521,11 +521,11 @@ module.directive("mdpDatePicker", ["$mdpDatePicker", "$timeout", function($mdpDa
                 inputElement.on("reset input blur", onInputElementEvents);
 
                 // This only works for DD/MM/YYYY format
-                inputElement.bind('keypress', (event) => {
-                    let regexChar = new RegExp('^[0-9\/]$', 'i');
-                    let regexDate = new RegExp('^([0-9]{1,2}(\/)?){1,2}([0-9]{1,4})?$');
-                    const key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-                    const currentInput = scope.model.$viewValue ? scope.model.$viewValue + key : key;
+                function onPressKey(event) {
+                    var regexChar = new RegExp('^[0-9\/]$', 'i');
+                    var regexDate = new RegExp('^([0-9]{1,2}(\/)?){1,2}([0-9]{1,4})?$', 'i');
+                    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                    var currentInput = scope.model.$viewValue ? scope.model.$viewValue + key : key;
 
                     if (key && !regexChar.test(key)) {
                         event.preventDefault();
@@ -533,17 +533,16 @@ module.directive("mdpDatePicker", ["$mdpDatePicker", "$timeout", function($mdpDa
                     }
 
                     if (currentInput) {
-                        console.log(currentInput);
                         if (!regexDate.test(currentInput)) {
                             event.preventDefault();
                             return false;
                         }
 
-                        const arrayDate = currentInput.split('/');
+                        var arrayDate = currentInput.split('/');
 
-                        const day = arrayDate[0] ? parseInt(arrayDate[0], 10) : undefined;
-                        const month = arrayDate[1] ? parseInt(arrayDate[1], 10) : undefined;
-                        const year = arrayDate[2] ? parseInt(arrayDate[2], 10): undefined;
+                        var day = arrayDate[0] ? parseInt(arrayDate[0], 10) : undefined;
+                        var month = arrayDate[1] ? parseInt(arrayDate[1], 10) : undefined;
+                        var year = arrayDate[2] ? parseInt(arrayDate[2], 10): undefined;
 
                         if (day > 31) {
                             event.preventDefault();
@@ -555,7 +554,9 @@ module.directive("mdpDatePicker", ["$mdpDatePicker", "$timeout", function($mdpDa
                             return false;
                         }
                     }
-                });
+                }
+
+                inputElement.bind('keypress', onPressKey);
 
                 scope.$on("$destroy", function() {
                     inputElement.off("reset input blur", onInputElementEvents);

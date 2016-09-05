@@ -460,7 +460,7 @@ module.directive("mdpDatePicker", ["$mdpDatePicker", "$timeout", function($mdpDa
                 inputElement.on("reset input blur", onInputElementEvents);
 
                 // This only works for DD/MM/YYYY format
-                inputElement.bind('keypress', (event) => {
+                inputElement.bind('keypress', function (event) {
                     let regexChar = new RegExp('^[0-9\/]$', 'i');
                     let regexDate = new RegExp('^([0-9]{1,2}(\/)?){1,2}([0-9]{1,4})?$');
                     const key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
